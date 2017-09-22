@@ -1,0 +1,28 @@
+<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: {class: '', id: 'contact', method: :post  }) do |f| %>
+
+	<div class="panel-body bg-light p30">
+		<div class="row">
+			<div class="col-sm-12 pr30">
+
+				<%= devise_error_messages! %>
+
+				<div class="section">
+					<label for="user_email" class="field-label text-muted fs18 mb10">E-mail</label>
+					<label for="user_email" class="field prepend-icon">
+						<%= f.email_field :email, autofocus: true, :class => 'form-control', :placeholder => 'E-mail' %>
+						<label for="username" class="field-icon">
+							<i class="fa fa-envelope"></i>
+						</label>
+					</label>
+				</div>
+				<!-- end section -->
+
+			</div>
+			<%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
+		</div>
+	</div>
+	<!-- end .form-body section -->
+	<div class="panel-footer clearfix p10 ph15">
+		<%= f.submit 'Восстановить пароль', class: 'button btn-system mr10 pull-right' %>
+	</div>
+<% end %>

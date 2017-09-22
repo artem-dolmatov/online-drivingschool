@@ -1,0 +1,46 @@
+/* Made by rostixman - rostixman@gmail.com */
+
+@import '../../mixin.scss';
+
+/* --- TEXT ------------------------------------------------------------------------- */
+
+.custom-modal {
+	width: 800px!important;
+	background-color: #FFF;
+	border: #000 solid 1px;
+	text-align: left;
+	display: none;
+	position: absolute;
+	padding: 25px 50px;
+	box-shadow: 0 1px 10px 0 rgba(0, 0, 0, .5);
+	font-family: 'Roboto Slab', sans-serif;
+	margin-bottom: 90px;
+	@include border-radius(3px);
+
+	.close-header {
+		display: block;
+		color: #000000;
+		font: bold 14px 'Open Sans', Arial;
+		position: absolute;
+		top: 30px;
+		right: 50px;
+	}
+
+	.title {
+		text-align: center;
+		font: 24px 'Open Sans', Arial;
+		margin-bottom: 8px;
+		color: #000000;
+	}
+
+	.body {
+		padding: 25px 0;
+		border-top: 1px solid #000000;
+		border-bottom: 1px solid #000000;
+	}
+
+	.footer-action {
+		margin-top: 25px;
+
+	}
+}

@@ -1,0 +1,119 @@
+<%= form_for([:admin, data], :html => {:id => 'admin-form', :class => 'form-horizontal group-border stripped admin-form', :multipart => true, :autocomplete => 'off'}) do |f| %>
+
+    <div class="panel-body">
+        <%= render 'admin/_portlets/commons/errors', data: data %>
+
+        <% entity.form_fields.each do |field| %>
+            <% if (field[:roles].count == 0) || (current_user.role? :admin) || (field[:roles].include?(eval(":#{current_user.role.name}"))) %>
+                <% if (field[:options][:actions].count == 0) || (field[:options][:actions].include?(action)) %>
+                    <%= render partial: "admin/_portlets/_tags/#{field[:type]}/#{field[:template]}",
+                               locals: {
+                                       f: f,
+                                       field: field,
+                                       entity: entity,
+                                       data: data,
+                                       action: action
+                               } %>
+                <% end %>
+            <% end %>
+        <% end %>
+    </div>
+
+    <div class="panel-footer text-left">
+        <%= render 'admin/_portlets/commons/form_footer', f: f, data: data, actions: actions, action: action %>
+    </div>
+
+<% end %>
+
+<% content_for :javascript do %>
+    <script>
+        //(function($) {
+        $(document).ready(function(){
+
+            $.validator.addMethod(
+                    "regex",
+                    function(value, element, regexp) {
+                        var re = new RegExp(regexp);
+                        return this.optional(element) || re.test(value);
+                    },
+                    "Please check your input."
+            );
+
+
+            $("#admin-form").validate({
+                ignore: ':hidden:not(.admin-form__select2-multiple__tag, .admin-form__select2-single, .admin-form__select2-multiple, .textarea_summernote), .entity_file_tag, .note-dialog input',
+
+                /* @validation states + elements
+                 ------------------------------------------- */
+
+                errorClass: "state-error",
+                validClass: "state-success",
+                errorElement: "em",
+
+                /* @validation rules
+                 ------------------------------------------ */
+
+                rules: {
+                    <% entity.form_fields.each do |field| %>
+                        <% if (field[:validates][:actions].count == 0) || (field[:validates][:actions].include?(action)) %>
+                            <% if field[:validates][:rules].count > 0 %>
+                                "<%= entity.to_s.underscore.downcase %>[<%= field[:machine] %>]<%= '[]' if field[:options][:multiple] %>": {
+                                    <% field[:validates][:rules].each do |key, value| %>
+                                        <%= key.to_s %>: <% if key.to_s == 'regex' %> "<%= value %>"<% else %><%= value %><% end %>,
+                                    <% end %>
+                                },
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                    "test": {
+                        required: true
+                    }
+                },
+
+                /* @validation error messages
+                 ---------------------------------------------- */
+
+                messages: {
+                    <% entity.form_fields.each do |field| %>
+                        <% if (field[:validates][:actions].count == 0) || (field[:validates][:actions].include?(action)) %>
+                            <% if field[:validates][:messages].count > 0 %>
+                                "<%= entity.to_s.underscore.downcase %>[<%= field[:machine] %>]<%= '[]' if field[:options][:multiple] %>": {
+                                    <% field[:validates][:messages].each do |key, value| %>
+                                        <%= key.to_s %>: '<%= value %>',
+                                    <% end %>
+                                },
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                    "test": {
+                        required: 'test'
+                    }
+                },
+
+                /* @validation highlighting + error placement
+                 ---------------------------------------------------- */
+
+                highlight: function(element, errorClass, validClass) {
+                    $(element).closest('.field').addClass(errorClass).removeClass(validClass);
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).closest('.field').removeClass(errorClass).addClass(validClass);
+                },
+                errorPlacement: function(error, element) {
+                    if (element.is(":radio") || element.is(":checkbox")) {
+                        element.closest('.option-group').after(error);
+                    } else {
+                        error.insertAfter(element.parent());
+                    }
+                },
+                beforeSubmit: function(arr, $form, options) {
+                    console.log('все ок ');
+                    var l = Ladda.bind('.admin-form__submit-link', {
+                        timeout: 15000
+                    });
+                    l.start();
+                }
+            });
+        });//(jQuery);
+    </script>
+<% end %>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--Info -->
+    <title><%= "#{@app_name} ошибка" %></title>
+
+    <%= stylesheet_link_tag    'https://fonts.googleapis.com/css?family=Open+Sans:400,800italic,800,700italic,700,600italic,600,400italic,300italic,300&subset=latin,cyrillic-ext,cyrillic' %>
+    <%= stylesheet_link_tag    'error', media: 'all' %>
+    <%= javascript_include_tag 'error' %>
+
+</head>
+  
+<!--Body -->
+<body class="error_page error_<%= @app_name %>">
+
+    <a href="<%= site_root_path %>" class="logo">
+        <%= image_tag '' %>
+    </a>
+
+    <%= yield %>
+</body>
+</html>

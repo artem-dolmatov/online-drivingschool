@@ -1,0 +1,185 @@
+<% content_for :title, 'Тесты'
+   breadcrumb :general, [['Рабочий стол', 'admin_root_path'],
+                         ['Тесты', 'admin_student_topics_path'],
+                         [(@topic.exam == 1 ? 'Экзамен' : 'Лекция'), "admin_student_topic_lecture_path(#{@topic.id})"],
+                         ["#{@topic.name} - Вопросы", 'blank']] %>
+
+<!-- begin: .tray-center -->
+<div class="tray tray-center">
+    <% if @topic.exam == 1 %>
+        <input type="hidden" class="is-exam" value="1">
+    <% end %>
+	<div class="admin-panels">
+		<div class="row">
+
+			<div class="col-md-12">
+				<div class="panel sort-disable panel-visible"
+				     data-panel-color="false"
+				     data-panel-remove="false"
+				     data-panel-title="false"
+				     data-panel-collapse="false"
+				     data-panel-fullscreen="false"
+				>
+					<div class="panel-heading">
+                        <span class="panel-title">
+                            Тема: <%= @topic.name %> - Вопросов: <%= @topic_questions.count %>
+                        </span>
+					</div>
+					<div class="panel-body lecture">
+						<% if @topic_questions.any? %>
+							<div class="tab-block mb25">
+								<ul class="nav nav-tabs tabs-border">
+									<% @topic_questions.each_with_index do |question, index| %>
+										<% number_q = index + 1 %>
+
+										<li class="<%= 'active' if number_q == 1%>">
+											<a href="#question_<%= number_q %>" id="question_<%= number_q %>_link" <% if current_user.role? :admin %>data-toggle="tab"<% end %> class="question_link"><%= number_q %></a>
+										</li>
+									<% end %>
+
+									<li>
+										<a href="#result_test" id="result_test_link" class="question_link"> Результат теста </a>
+									</li>
+								</ul>
+								<div class="tab-content">
+
+									<% @topic_questions.each_with_index do |question, index| %>
+										<% number_q = index + 1 %>
+										<% image = EntityFile.where(:entity => 'Question', :entity_id => question.id, :name => 'image').first %>
+
+										<div id="question_<%= number_q %>" class="question tab-pane <%= 'active' if number_q == 1 %>">
+											<div class="img-responsive thumbnail ">
+												<% unless image.nil? %>
+													<%= image_tag image.file, class: '' %>
+												<% else %>
+													<div class="alert alert-default alert-dismissable" style="margin-bottom: 0;">
+														<h3 class="mt5">К данному вопрос изображения нет.</h3>
+													</div>
+												<% end%>
+											</div>
+
+											<div class="alert alert-dark alert-dismissable">
+												<h3 class="mt5"><%= question.name %></h3>
+											</div>
+
+
+											<% question.answers.order('RANDOM()').each_with_index do |answer, index|%>
+												<% number_a = index + 1 %>
+												<div class="radio-custom answer mb5">
+													<input type="radio" id="answer_<%= answer.id %>" name="question_<%= question.id %>[answer]" value="<%= answer.id %>" data-correct="<%= answer.correct %>">
+													<label for="answer_<%= answer.id %>"><%= number_a %>. <%= answer.name %></label>
+
+													<% if answer.correct == 1 %>
+														<div class="radio-help alert alert-success alert-dismissable mt10" style="display: <%= (current_user.role?(:admin) ? 'block' : 'none') %>">
+															<i class="fa fa-check pr10"></i>
+															<strong>Правильно!</strong> <%= answer.desc %>
+														</div>
+													<% else %>
+														<div class="radio-help alert alert-danger alert-dismissable mt10" style="display: <%= (current_user.role?(:admin) ? 'block' : 'none') %>">
+															<i class="fa fa-remove pr10"></i>
+															<strong>Ошибка!</strong> <%= answer.desc %>
+														</div>
+													<% end %>
+												</div>
+											<% end %>
+
+											<% if @topic_questions.count != number_q %>
+												<a href="#question_<%= number_q + 1 %>_link" class="btn btn-success btn-block next-question mw200 mt15 disabled">Следующий вопрос</a>
+											<% else %>
+												<a href="#result_test_link" class="btn btn-success btn-block get-result mw200 mt15 disabled" data-id="<%= @topic.id %>">Завершить тест</a>
+											<% end %>
+
+										</div>
+									<% end %>
+
+									<div id="result_test" class="result tab-pane" data-last="<%= @topic.is_last? %>">
+
+										<% if @exam == @topic %>
+											<h1 class="mtn exam-goodbye">Экзамен пройден!</h1>
+
+											<h1 class="mtn"><small>Ваш результат:</small></h1>
+
+											<div class="alert alert-success alert-dismissable">
+												<i class="fa fa-check pr10"></i>
+												Правильных ответов: <strong class="success-result">0</strong>
+											</div>
+
+											<div class="alert alert-danger alert-dismissable">
+												<i class="fa fa-remove pr10"></i>
+												Ошибок допущено: <strong class="error-result">0</strong>
+											</div>
+
+											<!--<div class="alert alert-info light information alert-dismissable hidden">
+												<i class="fa fa-info pr10"></i>
+												<strong>Важно!</strong> Для прослушивания следующей лекции, допускается максимум <strong>1</strong> ошибка
+											</div>-->
+
+											<a href="<%= admin_student_topic_questions_path @topic %>" class="btn btn-default">
+												<i class="glyphicons glyphicons-repeat"></i> &nbsp;&nbsp; Повторить экзамен
+											</a>
+										<% else %>
+											<h1 class="mtn test-goodbye">Тест закончен!</h1>
+
+											<h1 class="mtn"><small>Ваш результат:</small></h1>
+
+											<div class="alert alert-success alert-dismissable">
+												<i class="fa fa-check pr10"></i>
+												Правильных ответов: <strong class="success-result">0</strong>
+											</div>
+
+											<div class="alert alert-danger alert-dismissable">
+												<i class="fa fa-remove pr10"></i>
+												Ошибок допущено: <strong class="error-result">0</strong>
+											</div>
+
+											<div class="alert alert-info light information alert-dismissable hidden">
+												<i class="fa fa-info pr10"></i>
+												<strong>Важно!</strong> Для прослушивания следующей лекции, допускается максимум <strong>2 ошибки</strong>
+											</div>
+
+											<a href="<%= admin_student_topic_questions_path @topic %>" class="btn btn-default">
+												<i class="glyphicons glyphicons-repeat"></i> &nbsp;&nbsp; Повторить тест
+											</a>
+											<a href="<%= admin_student_topic_lecture_path @topic %>" class="btn btn-default">
+												<i class="glyphicons glyphicons-facetime_video"></i> &nbsp;&nbsp; Повторить Лекцию
+											</a>
+											<% if current_user.role? :demo %>
+												<a href="<%= admin_student_topics_path %>" class="btn btn-success">
+													Для демо режиме доступна только одна лекция
+												</a>
+											<% else %>
+												<% unless @topic.next.nil? %>
+													<a href="<%= admin_student_topic_lecture_path @topic.next %>" data-id="<%= @topic.next.id %>" class="btn btn-success next-lecture hidden">
+														<i class="fa fa-arrow-right"></i> &nbsp;&nbsp; Следующая лекция
+													</a>
+												<% end %>
+												<% unless @exam.nil? %>
+													<a href="<%= admin_student_topic_questions_path @exam %>" class="btn btn-warning next-exam hidden">
+														<i class="glyphicons glyphicons-crown"></i> &nbsp;&nbsp; Пройти экзамен
+													</a>
+												<% end %>
+											<% end %>
+										<% end %>
+
+
+
+									</div>
+
+								</div>
+							</div>
+
+						<% else %>
+
+							Вопросов по данной теме еще нет :(
+
+						<% end %>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+<!-- end: .tray-center -->

@@ -1,0 +1,105 @@
+<% content_for :title, 'Тесты'
+   breadcrumb :general, [['Рабочий стол', 'admin_root_path'], ['Тесты', 'blank']] %>
+
+<!-- begin: .tray-center -->
+<div class="tray tray-center">
+
+	<div class="admin-panels">
+		<div class="row">
+
+			<div class="col-md-12">
+				<div class="panel sort-disable panel-visible"
+				     data-panel-color="false"
+				     data-panel-remove="false"
+				     data-panel-title="false"
+				     data-panel-collapse="false"
+				     data-panel-fullscreen="false"
+				>
+					<div class="panel-heading">
+                        <span class="panel-title">
+                            Вопросы по темам
+                        </span>
+					</div>
+					<div class="panel-body topics">
+
+						<% @topics.each_with_index do |topic, index| %>
+							<% image = EntityFile.where(:entity => 'Topic', :entity_id => topic.id, :name => 'image').first %>
+
+							<%
+							    prev_topic = topic.previous
+							    next_topic = topic.next
+							    @user_topic = UserTopic.where(user_id: current_user.id, topic_id: prev_topic.id).first unless prev_topic.nil?
+							    disabled_class ||= ''
+							    disabled_class = 'disabled' if (index != 0) && ((current_user.role? :student) || (current_user.role? :demo))
+								disabled_class = '' if !@user_topic.nil? && @user_topic.done == 1
+							%>
+							<% if ((index )%4 == 0) || ( index == 0 ) %>
+								<div class="row">
+							<% end %>
+
+
+								<div class="col-md-3" data-prev="<%= prev_topic.id unless prev_topic.nil? %>" data-current="<%= topic.try(:id) %>" data-next="<%= next_topic.try(:id) %>">
+									<a href="<%= admin_student_topic_lecture_path topic %>" class="topic btn btn-block p0 nowrap-normal <%= disabled_class %>">
+										<div class="topics__item panel panel-tile text-center br-a br-light">
+											<div class="topics__img-wrapper panel-body bg-light">
+												<%= image_tag image.file unless image.nil? %>
+											</div>
+											<div class="panel-footer bg-light dark br-t br-light p12">
+											    <span class="fs11">
+											        <b><%= index + 1 %>. <%= topic.name %></b>
+											    </span>
+											</div>
+										</div>
+
+										<div class="lock"> <i class="glyphicons glyphicons-lock"></i> </div>
+									</a>
+								</div>
+
+							<% if ( ((index + 1)%4) == 0 ) || ( @topics.last.id == topic.id ) %>
+								</div>
+							<% end %>
+
+						<% end %>
+
+
+						<% unless @exam.nil? %>
+							<% image = EntityFile.where(:entity => 'Topic', :entity_id => @exam.id, :name => 'image').first %>
+
+							<%
+							   prev_topic = Topic.where(exam: 0, ticket: 0).order(weight: :asc).last
+							   @user_topic = UserTopic.where(user_id: current_user.id, topic_id: prev_topic.id).first unless prev_topic.nil?
+							   disabled_class ||= 'disabled'
+							   disabled_class = '' if (!@user_topic.nil? && @user_topic.done == 1) || (current_user.role? :admin)
+							%>
+							<div class="row">
+								<div class="col-md-6 col-md-offset-3">
+									<a href="<%= admin_student_topic_questions_path @exam %>" class="topic btn btn-block p0 nowrap-normal <%= disabled_class %>">
+										<div class="topics__item panel panel-tile text-center br-a br-light">
+											<div class="topics__img-wrapper panel-body bg-light">
+												<% if image.nil? %>
+
+												<% else %>
+													<%= image_tag image.file unless image.nil? %>
+												<% end %>
+											</div>
+											<div class="panel-footer bg-light dark br-t br-light p12" style="background: #f6bb42; color: white;">
+												    <span class="fs11">
+												        <b><%= @exam.name %></b>
+												    </span>
+											</div>
+										</div>
+
+										<div class="lock"> <i class="glyphicons glyphicons-lock"></i> </div>
+									</a>
+								</div>
+							</div>
+						<% end %>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+<!-- end: .tray-center -->

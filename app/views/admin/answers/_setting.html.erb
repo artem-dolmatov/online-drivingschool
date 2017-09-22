@@ -1,0 +1,42 @@
+<%
+   entity =  Answer
+
+   if action == 'new'
+       content_for :title, entity.signatures[:create_element]
+       breadcrumb :general, [[entity.signatures[:elements], 'admin_answers_path'], [entity.signatures[:create_element], 'blank']]
+   end
+
+   if action == 'edit'
+       content_for :title, entity.signatures[:edit_element]
+       breadcrumb :general, [[entity.signatures[:elements], 'admin_answers_path'], [entity.signatures[:edit_element], 'blank']]
+   end
+
+   actions = [{
+                      name: 'Сохранить',
+                      type: 'button',
+                      template: 'submit_form',
+                      class: 'btn ladda-button btn-success admin-form__submit-link',
+                      action: '',
+                      exclusion: []
+              },{
+                      name: 'Отмена',
+                      type: 'button',
+                      template: 'link_to',
+                      link: 'admin_answers_url', # LINK
+                      routes: true,
+                      class: 'btn ladda-button btn-info',
+                      action: '',
+                      method: :get,
+                      exclusion: []
+              }]
+
+   links = [] %>
+
+<%= render 'admin/_portlets/portlet',
+           action: action,
+           title: title,
+           links: links,
+           data: @answer,
+           entity: entity,
+           actions: actions,
+           data_attr: '' %>

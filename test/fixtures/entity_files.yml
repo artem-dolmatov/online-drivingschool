@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  entity: MyString
+  entity_id: 1
+  file: MyString
+  main: 1
+  title: MyString
+  desc: MyText
+  user_id: 
+
+two:
+  entity: MyString
+  entity_id: 1
+  file: MyString
+  main: 1
+  title: MyString
+  desc: MyText
+  user_id: 

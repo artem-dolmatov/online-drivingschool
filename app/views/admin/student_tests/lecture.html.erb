@@ -1,0 +1,62 @@
+<% content_for :title, 'Тесты'
+   breadcrumb :general, [['Рабочий стол', 'admin_root_path'],
+                         ['Тесты', 'admin_student_topics_path'],
+                         ["#{@topic.name} - Лекция", 'blank']] %>
+
+<!-- begin: .tray-center -->
+<div class="tray tray-center">
+
+	<div class="admin-panels">
+		<div class="row">
+
+			<div class="col-md-12">
+				<div class="panel sort-disable panel-visible"
+				     data-panel-color="false"
+				     data-panel-remove="false"
+				     data-panel-title="false"
+				     data-panel-collapse="false"
+				     data-panel-fullscreen="false"
+				>
+					<div class="panel-heading">
+                        <span class="panel-title">
+                            Лекция: <%= @topic.name %>
+                        </span>
+					</div>
+					<div class="panel-body lecture">
+						<div class="row">
+							<div class="col-xs-12">
+								<% video = EntityFile.where(entity: 'Topic', entity_id: @topic.id, name: 'video').first %>
+								<% if video.nil? %>
+
+									<div class="alert alert-default alert-dismissable" style="margin-bottom: 0;">
+										<h3 class="mt5">Промежуточная аттестация</h3>
+
+										<p>Видео не предусмотрено, сразу переходите к решению тестов</p>
+										<br>
+									</div>
+
+								<% else %>
+									<%= videojs_rails sources: { mp4: video.file.url, webm: video.file.url},
+									                  setup: "{}",
+									                  controls: true,
+									                  width: 800, height: 400 %>
+								<% end %>
+
+
+							</div>
+						</div>
+
+						<div class="row mt20">
+							<div class="col-xs-12">
+								<a href="<%= admin_student_topic_questions_path %>" type="button" class="btn btn-lg btn-success btn-block mw400 mlr">Все понял, готов пройти тест</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+<!-- end: .tray-center -->

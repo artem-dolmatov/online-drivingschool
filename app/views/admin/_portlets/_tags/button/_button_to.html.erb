@@ -1,0 +1,6 @@
+<% unless action[:exclusion].include? data.id %>
+    <%= button_to(action[:name],
+                (action[:routes] ? eval("#{action[:link]}(:id => #{data.id}, :format => :html)") : action[:link]),
+                method: action[:method],
+                class: action[:class]) if (action[:action].length == 0) || (action[:action] == current) %>
+<% end %>

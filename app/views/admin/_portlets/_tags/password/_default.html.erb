@@ -1,0 +1,66 @@
+<%= f.password_field 'hidden', autocomplete: 'off', :class => 'gui-input', :placeholder => field[:name], style: 'display: none;' %>
+
+<% if action == 'edit' %>
+    <div class="form-group">
+        <label class="col-md-3 control-label" for="">
+        </label>
+        <div class="col-md-9">
+            <div class="bs-component field">
+                <a href="#" class="show_<%= field[:machine] %>_form-group">Изменить пароль</a>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<div class="form-group  <%= "#{field[:machine]}_form-group" %>" <%= 'style="display: none;"'.html_safe if action == 'edit' %>>
+    <label class="col-md-3 control-label" for="">
+        <!-- FIELD -->      <!-- STAR -->
+        <%= field[:name] %> <%= raw '<span class="text-danger">*</span>' if field[:validates][:rules].count > 0 %>
+    </label>
+    <div class="col-md-9">
+        <div class="bs-component field">
+            <!-- FIELD -->
+            <%= f.password_field eval(":#{field[:machine]}"), autocomplete: 'off', :class => 'gui-input', :placeholder => field[:name] %>
+
+            <!-- TOOLTIP TEXT -->
+            <% if field[:options][:tooltip_text] %>
+                <b class="tooltip tip-left-top"><em> <%= field[:options][:tooltip_text] %> </em></b>
+            <% end %>
+
+            <!-- HELP TEXT -->
+            <% if (field[:options][:help_text]) && (action == 'edit') %>
+                <span class="help-block mt5 mbn">&nbsp;<i class="fa fa-info-circle"></i> <%= raw field[:options][:help_text] %> </span>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<% if action == 'edit' %>
+    <% content_for :javascript do %>
+        <script>
+
+            $(document).ready(function(){
+                // password field
+                $('#<%= entity.to_s.downcase %>_<%= field[:machine] %>').on('keydown', function(event) {
+                    if ($(this).val().length > 0) {
+                        $(this).rules("add", {
+                            minlength: 8,
+                            messages: {
+                                minlength: jQuery.validator.format("Длина пароля должна быть не менее 8 символов")
+                            }
+                        });
+                        $(this).valid();
+                    } else {
+                        $(this).rules("remove");
+                    }
+                });
+
+                $('.show_<%= field[:machine] %>_form-group').on('click', function(e){
+                    e.preventDefault();
+                    $(this).parents('.form-group').slideUp(300);
+                    $('.<%= field[:machine] %>_form-group').slideDown(300);
+                });
+            });
+        </script>
+    <% end %>
+<% end %>

@@ -1,0 +1,5 @@
+<% if prop[:options][:route] %>
+    <a href="<%= eval(prop[:options][:link]) %>"><%= eval("datum.#{prop[:machine]}") %></a>
+<% else %>
+    <a href="<%= eval("datum.#{prop[:machine]}") %>" target="_blank"><%= eval("datum.#{prop[:machine]}") %></a>
+<% end %>

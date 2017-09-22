@@ -1,0 +1,58 @@
+<div class="form-group">
+
+    <%= render 'admin/_portlets/_tags/_label/default', field: field %>
+
+    <div class="col-md-9">
+        <div class="bs-component field">
+
+            <!-- FIELD -->
+            <%= f.text_area eval(":#{field[:machine]}"), size: '50x5', :class => 'summernote textarea_summernote', :placeholder => field[:name] %>
+
+            <!-- TOOLTIP TEXT -->
+            <% if field[:options][:tooltip_text] %>
+                <b class="tooltip tip-left-top"><em> <%= field[:options][:tooltip_text] %> </em></b>
+            <% end %>
+
+            <!-- HELP TEXT -->
+            <% if field[:options][:help_text] %>
+                <span class="input-footer">
+                    <strong>Подсказка:</strong> <%= raw field[:options][:help_text] %>
+                </span>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<% content_for :javascript do %>
+    <script>
+
+        $(document).ready(function(event){
+            // Init Summernote Plugin
+            var textarea = $('#<%= entity.to_s.underscore.downcase %>_<%= field[:machine] %>');
+            textarea.summernote({
+                height: <%= field[:options][:height] %>, //set editable area's height
+                focus: <%= field[:options][:focus] %>, //set focus editable area after Initialize summernote
+                toolbar: <%= field[:options][:toolbar] %>,
+                oninit: function() {},
+                onChange: function(contents, $editable) {
+                    textarea.val(textarea.code());
+                    textarea.valid(); // trigger validation on this element
+                },
+                onpaste: function(e) {
+                    console.log('html entity is clear');
+                    var thisNote = $(this);
+                    var updatePastedText = function(someNote){
+                        var original = someNote.code();
+                        var cleaned = CleanPastedHTML(original); //this is where to call whatever clean function you want. I have mine in a different file, called CleanPastedHTML.
+                        someNote.code('').html(cleaned); //this sets the displayed content editor to the cleaned pasted code.
+                    };
+                    setTimeout(function () {
+                        //this kinda sucks, but if you don't do a setTimeout,
+                        //the function is called before the text is really pasted.
+                        updatePastedText(thisNote);
+                    }, 10);
+                }
+            });
+        });
+    </script>
+<% end %>

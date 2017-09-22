@@ -1,0 +1,11 @@
+<div class="form-group hidden">
+
+    <%= render 'admin/_portlets/_tags/_label/default', field: field %>
+
+    <div class="col-md-9">
+        <div class="bs-component field">
+            <!-- FIELD -->
+            <%= f.hidden_field eval(":#{field[:machine]}"), :value => eval(field[:options][:value]), :class => 'gui-input', :placeholder => field[:name] %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<% unless action[:exclusion].include? data.id %>
+    <%= link_to(action[:name],
+                (action[:routes] ? eval("#{action[:link]}") : action[:link]),
+                method: action[:method],
+                class: action[:class],
+                data: {style: 'slide-down'}) if (action[:action].length == 0) || (action[:action] == current) %>
+<% end %>

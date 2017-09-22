@@ -1,0 +1,33 @@
+<!-- Start: Header -->
+<header class="navbar navbar-fixed-top bg-system">
+	<div class="navbar-branding dark bg-system">
+		<a class="navbar-brand" href="">
+			<span class="octicon octicon-ruby"></span>&nbsp;&nbsp;<b>Авто</b>школа
+		</a>
+		<span id="toggle_sidemenu_l" class="ad ad-lines"></span>
+	</div>
+	<!--<ul class="nav navbar-nav navbar-left">
+
+		<li>
+			<%= link_to raw('<span class="fa fa-eye fs18"></span>'), site_root_path, target: '_blank' %>
+		</li>
+	</ul>-->
+	<ul class="nav navbar-nav navbar-right">
+		<li class="menu-merge mr15">
+			<%= link_to edit_admin_user_path(current_user.id), class: 'fw600 p15' do %>
+				<%#= image_tag 'avatars/1.jpg', :class => 'mw30 br64 ', :alt => 'avatar' %>
+				<span class="hidden-xs pl15" style="line-height: 29px; padding-left: 5px!important;">
+					<%= current_user.email %>
+				</span>
+			<% end %>
+		</li>
+		<li>
+			<div class="navbar-btn btn-group">
+				<%= link_to destroy_user_session_path, class: 'btn btn-sm', style: 'border-radius: 2px' do %>
+					<span class="fa fa-power-off"></span>
+				<% end %>
+			</div>
+		</li>
+	</ul>
+</header>
+<!-- End: Header -->

@@ -1,0 +1,5 @@
+<% unless action[:exclusion].include? data.id %>
+    <a class="<%= action[:class] %>" data-style="slide-down" href="#">
+        <span class="ladda-label"><%= raw(action[:name]) %></span>
+    </a>
+<% end %>

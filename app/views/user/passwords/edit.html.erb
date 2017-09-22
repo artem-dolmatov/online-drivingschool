@@ -1,0 +1,61 @@
+<!-- Start login container -->
+<div class="container login-container">
+    <div class="login-panel panel panel-default plain animated bounceIn">
+        <!-- Start .panel -->
+        <div class="panel-heading">
+            <h4 class="panel-title text-center auth-form">
+                Восстановление пароля
+            </h4>
+        </div>
+        <div class="panel-body">
+
+            <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: 'form-horizontal mt0' }) do |f| %>
+
+                <%= devise_error_messages! %>
+                <%= f.hidden_field :reset_password_token %>
+
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <div class="input-group input-icon">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+
+                            <%= f.password_field :password, autofocus: true, autocomplete: "off", placeholder: 'Новый пароль', class: 'form-control' %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <div class="input-group input-icon">
+                            <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                            <%= f.password_field :password_confirmation, autocomplete: 'off', :class => 'form-control', :placeholder => 'Подтвердите пароль' %>
+                        </div>
+                        <% if @minimum_password_length %>
+                            <div class="help-block">(8 символов минимум)</div>
+                        <% end %>
+                    </div>
+                </div>
+
+                <div class="form-group mb0">
+                    <div class="col-md-12">
+                        <%= f.submit 'Изменить пароль', :class => 'btn btn-default' %>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+        <div class="panel-footer gray-lighter-bg bt">
+            <h4 class="text-center"><strong>У вас уже есть кабинет ?</strong>
+            </h4>
+            <p class="text-center">
+                <%= link_to 'Войдите', new_user_session_path, :class => 'btn btn-primary' %>
+            </p>
+        </div>
+    </div>
+    <!-- End .panel -->
+</div>
+<!-- End login container -->
+<div class="container">
+    <div class="footer">
+        <p class="text-center">&copy;<%= Time.now.year %></p>
+    </div>
+</div>

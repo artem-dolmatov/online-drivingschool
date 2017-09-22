@@ -1,0 +1,204 @@
+$(document).ready(function(){
+
+    var change_file_text_name = function(obj) {
+        var _this = obj;
+        var files = _this[0].files;
+
+        var val = _this.val().replace('C:\\fakepath\\','');
+
+        var field_title   = $('.<%= "#{entity_name}__title" %>');
+
+        if (files.length > 1) {
+            val = 'Выбрано файлов: ' + files.length;
+        }
+
+        field_title .val(val);
+        _this.valid();
+
+        return files
+    };
+
+    // change file
+    $('#<%= entity_name %>').on('change', function(event) {
+
+        var _this = $(this);
+
+        var files = change_file_text_name($(this));
+
+        var wrap_progress = $('.<%= "#{entity_name}__progress-bar" %>');
+        var wrap_previews = $('.<%= "#{entity_name}__previews" %>');
+
+        var progress_bar  = wrap_progress.find('.progress-bar[role="progress_bar"]');
+
+
+        var file_count = files.length;
+        if (files.length) {
+
+            var options = {
+                url: '<%= admin_file_load_path :format => :js %>',
+                type: 'patch',
+                dataType:  'json',
+                clearForm: false,
+                resetForm: false,
+                uploadProgress: function(event, position, total, percentComplete) {
+                    var percentVal = (percentComplete-1) + '%';
+                    progress_bar.css({width: percentVal}).text(percentVal);
+                },
+                beforeSubmit: function(formData, jqForm, options) {
+                    wrap_progress.slideDown(600);
+                },
+                success: function processJson(data) {
+                    _this.val('');
+
+                    var preview_count = wrap_previews.data('count');
+
+                    if (wrap_previews.data('multiple') == false) {
+                        preview_count = 0;
+                        var preview_file = wrap_previews.find('.preview-file');
+
+                        preview_file.addClass('animated bounceOut');
+
+                        preview_file.delay(700).animate({width: 0, padding: 0, margin: 0}, 300);
+
+                        setTimeout(function(){
+                            preview_file.remove();
+                        }, 2700);
+                    }
+                    wrap_previews.data('count', parseInt(preview_count) + file_count);
+
+                    var percentVal = '100%';
+                    progress_bar.css({width: percentVal}).text(percentVal);
+                    wrap_progress.slideUp(1200, function(){
+                        progress_bar.css({width: '0%'}).text('0%');
+                    });
+
+                    var html = '';
+                    var a_class = '';
+                    var img_src = '';
+                    var a_attr = '';
+                    var content_types = ['image/gif', 'image/jpeg', 'image/pjpeg', 'image/png'];
+
+                    for (var i in data['files']) {
+
+                        html += '<div class="preview-file col-md-3 mw400 ib">';
+                            html += '<div class="panel p6 pbn">';
+                                if (jQuery.inArray( data['files'][i].content_type, content_types ) == -1) {
+                                    a_class = 'file_link';
+                                    img_src = '/assets/partials/img/file.jpg';
+                                    a_attr = "target=_blank"
+                                } else {
+                                    a_class = 'magnific_popup';
+                                    img_src = data['files'][i].file.preview.url;
+                                    a_attr = ""
+                                }
+
+                                html += '<a class="img-wrap ' + a_class + '" href="' + data['files'][i].file.url + '" ' + a_attr + '>';
+                                    html += '<img src="' + img_src + '" class="img-responsive" title="' + data['files'][i].title + '">';
+                                html += '</a>';
+                                html += '<div class="row table-layout">';
+                                    html += '<div class="col-xs-8 pln">';
+                                        html += '<h6>' + data['files'][i].title + '</h6>';
+                                    html += '</div>';
+                                    html += '<div class="col-xs-4 text-right va-m prn">';
+                                        html += '<a href="#" class="btn btn-xs btn-default btn-bloc <%=entity_name%>_preview-file__delete" data-id="' + data['files'][i].id + '">';
+                                            html += '<span class="octicon octicon-trashcan fs16 text-muted"></span>';
+                                        html += '</a>';
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<input class="hidden" type="hidden" name="files[id][]" value="' + data['files'][i].id + '">';
+                        html += '</div>';
+                    }
+
+                    wrap_previews.find('.previews').prepend(html);
+                    wrap_previews.slideDown(300);
+                }
+            };
+
+            // bind form using 'ajaxForm'
+            $('#admin-form').ajaxSubmit(options);
+        } else {
+            console.log('Файлов нет')
+        }
+    });
+
+    // remove magnific
+    var body = $('body');
+    body.on('click', '.<%=entity_name%>_preview-file__delete', function(e) {
+        e.preventDefault();
+
+        var _this = $(this);
+        var id = $(this).data('id');
+        var preview_file = _this.parents('.preview-file');
+        var wrap_previews = $('.<%= "#{entity_name}__previews" %>');
+        var field_title   = $('.<%= "#{entity_name}__title" %>');
+
+        var preview_count = wrap_previews.data('count');
+
+        $.ajax({
+            url: '<%= admin_file_remove_path :format => :js %>',
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+            data: {id: id}
+        }).done(function(result) {
+
+            wrap_previews.data('count', parseInt(preview_count) - 1);
+            preview_file.addClass('animated bounceOut');
+
+            preview_file.delay(700).animate({width: 0, height: 0, padding: 0, margin: 0}, 300);
+
+
+            if (wrap_previews.data('count') <= 0) {
+                wrap_previews.delay(800).slideUp(300);
+
+                var file_field = $('#<%= entity_name %>');
+                file_field.val('');
+                change_file_text_name(file_field);
+
+                field_title.valid();
+            }
+
+            setTimeout(function(){
+                preview_file.remove();
+            }, 2700);
+        }).fail(function() {
+            console.log("remove image is error");
+        });
+    });
+
+
+    // init preview
+    $('.<%= "#{entity_name}__previews" %>').magnificPopup({
+        delegate: '.magnific_popup',
+        gallery: {
+            enabled: true
+        },
+        type: 'image',
+        callbacks: {
+            beforeOpen: function(e) {
+
+                $('body').addClass('mfp-bg-open');
+
+                // Set Magnific Animation
+                this.st.mainClass = 'mfp-zoomIn';
+
+                // Inform content container there is an animation
+                this.contentContainer.addClass('mfp-with-anim');
+            },
+            afterClose: function(e) {
+
+                setTimeout(function() {
+                    $('body').removeClass('mfp-bg-open');
+                    $(window).trigger('resize');
+                }, 1000)
+
+            }
+        },
+//        overflowY: 'scroll',
+        removalDelay: 200,
+        fixedContentPos: true
+    }).on('click', 'magnific_popup', function(e){
+        e.preventDefault();
+    });
+});

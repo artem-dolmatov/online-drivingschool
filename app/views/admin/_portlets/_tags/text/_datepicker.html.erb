@@ -1,0 +1,23 @@
+<div class="form-group">
+
+    <%= render 'admin/_portlets/_tags/_label/default', field: field %>
+
+    <div class="col-md-9">
+        <div class="bs-component field prepend-icon">
+            <!-- FIELD -->
+            <%= f.text_field eval(":#{field[:machine]}"), :data => {:number_month => field[:options][:number_month]},
+                                                          :class => 'gui-input datepicker',
+                                                          :placeholder => field[:name],
+                                                          :readonly => true,
+                                                          :value => (eval("data.#{field[:machine]}") ? eval("data.#{field[:machine]}.strftime('#{field[:options][:format]}')") : eval("Time.now.strftime('#{field[:options][:format]}')") ) %>
+            <label class="field-icon">
+                <i class="fa fa-calendar-o"></i>
+            </label>
+
+            <!-- HELP TEXT -->
+            <% if field[:options][:help_text] %>
+                <span class="help-block mt5 mbn">&nbsp;<i class="fa fa-info-circle"></i> <%= raw field[:options][:help_text] %> </span>
+            <% end %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="form-group">
+
+    <%= render 'admin/_portlets/_tags/_label/default', field: field %>
+
+    <div class="col-md-9">
+        <div class="bs-component field">
+
+            <!-- FIELD -->
+            <%= f.text_area eval(":#{field[:machine]}"), size: '50x5', :class => 'gui-textarea', :placeholder => field[:name] %>
+
+            <!-- TOOLTIP TEXT -->
+            <% if field[:options][:tooltip_text] %>
+                <b class="tooltip tip-left-top"><em> <%= field[:options][:tooltip_text] %> </em></b>
+            <% end %>
+
+            <!-- HELP TEXT -->
+            <% if field[:options][:help_text] %>
+                <span class="input-footer">
+                    <strong>Подсказка:</strong> <%= raw field[:options][:help_text] %>
+                </span>
+            <% end %>
+        </div>
+    </div>
+</div>

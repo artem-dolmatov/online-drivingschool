@@ -1,0 +1,8 @@
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-9">
+        <% actions.each do |item| %>
+            <%= render "admin/_portlets/_tags/#{item[:type]}/#{item[:template]}", f: f, action: item, current: action, data: data %>
+        <% end %>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<%
+   entity =  User
+   content_for :title, entity.signatures[:elements]
+   breadcrumb :general, [[entity.signatures[:elements], 'blank']]
+
+   links = [{
+                    name: "<i class=\"octicon octicon-plus\"></i>&nbsp;&nbsp; #{entity.signatures[:add_element]}",
+                    link: new_admin_user_url,
+                    class: 'btn ladda-button btn-system'
+            }]
+
+    if current_user.role? :methodist
+        actions = [{
+                           name: '<i class="fa fa-pencil"></i>',
+                           link: 'edit_admin_user_path',
+                           method: :get,
+                           format: 'html',
+                           class: 'btn-xs btn btn-system ',
+                           exclusion: [1]
+                   }]
+    else
+        actions = [{
+                           name: '<i class="fa fa-pencil"></i>',
+                           link: 'edit_admin_user_path',
+                           method: :get,
+                           format: 'html',
+                           class: 'btn-xs btn btn-system ',
+                           exclusion: [1]
+                   },{
+                           name: '<i class="octicon octicon-x"></i> ',
+                           link: 'admin_user_path',
+                           method: :delete,
+                           format: 'json',
+                           class: 'btn-xs btn btn-danger btn-row-delete',
+                           exclusion: [1]
+                   }]
+    end
+
+
+   table_data_attr = {
+           sort_disable: -1,
+           sort_column: 0,
+           sort_default: 'asc',
+           display_length: 25
+   } %>
+
+<%= render 'admin/_portlets/portlet',
+           action: 'index',
+           title: "<span class=\"glyphicon glyphicon-tasks\"></span> #{entity.signatures[:list_elements]}",
+           links: links,
+           data: @users,
+           entity: entity,
+           actions: actions,
+           data_attr: table_data_attr %>

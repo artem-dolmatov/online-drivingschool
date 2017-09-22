@@ -1,0 +1,15 @@
+/* Made by rostixman - rostixman@gmail.com */
+
+@import '../mixin.scss';
+
+/* --- BACKGROUNDS ------------------------------------------------------------------------- */
+
+.bg {
+	&.blue {
+		background: #2b83c1;
+	}
+
+	&.white {
+		background: #fff;
+	}
+}

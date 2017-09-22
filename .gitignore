@@ -1,0 +1,25 @@
+# Игнорирование конфига bundler
+/.bundle
+
+# Игнорирование дефолтной базы данных SQLite.
+/db/*.sqlite3
+
+# Игнорирование всех логов и временных файлов.
+/log/*
+!/log/.keep
+/tmp
+
+# Загруженные файлы
+public/properties/*
+public/uploads/*
+
+# Игнорирование прочих ненужных файлов.
+_gitignore
+doc/
+*.swp
+*~
+.project
+.DS_Store
+.idea
+.env.development
+.secret

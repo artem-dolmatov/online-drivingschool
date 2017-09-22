@@ -1,0 +1,9 @@
+<!-- Start: Sidebar Left Menu -->
+<ul class="nav sidebar-menu">
+
+    <% Admin::Setting.menu[eval(":#{current_user.role.name}")].each do |item| %>
+        <%= render 'layouts/admin/includes/menus/main/menu_item', item: item %>
+    <% end %>
+
+</ul>
+<!-- End: Sidebar Menu -->

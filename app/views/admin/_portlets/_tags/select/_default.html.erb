@@ -1,0 +1,23 @@
+<div class="form-group <%= field[:options][:hidden] %>">
+
+    <%= render 'admin/_portlets/_tags/_label/default', field: field %>
+
+    <div class="col-md-9">
+        <div class="bs-component field">
+            <!-- FIELD -->
+	        <%
+	           default = eval(field[:options][:default]) unless field[:options][:default].nil?
+	           val = eval("data.#{field[:machine]}")
+	        %>
+            <%= f.select eval(":#{field[:machine]}"),
+                         options_for_select( eval(field[:items]), (val.nil? ? default : val) ),
+                         {prompt: field[:options][:prompt]},
+                         {:multiple => field[:multiple], :class => 'form-control select2 admin-form__select2-single', :data => {:placeholder => field[:options][:prompt]}} %>
+
+            <!-- HELP TEXT -->
+            <% if field[:options][:help_text] %>
+                <span class="help-block mt5 mbn">&nbsp;<i class="fa fa-info-circle"></i> <%= raw field[:options][:help_text] %> </span>
+            <% end %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<% if (links.count > 0) && ((current_user.role? :admin) || (current_user.role? :methodist)) %>
+    <div class="mb10">
+        <% links.each do |item| %>
+            <a class="<%= item[:class] %>" data-style="slide-down" href="<%= item[:link] %>">
+                <span class="ladda-label"><%= raw(item[:name]) %></span>
+            </a>
+        <% end %>
+    </div>
+<% end %>

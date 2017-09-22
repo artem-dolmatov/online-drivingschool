@@ -1,0 +1,110 @@
+<% filter ||= @filter %>
+
+<%= render 'admin/_portlets/commons/links',
+           links: links %>
+
+<% if filter %>
+<!-- begin: .tray-center -->
+<div class="tray tray-center">
+
+    <div class="admin-panels">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="panel sort-disable panel-visible"
+                     data-panel-color="false"
+                     data-panel-remove="false"
+                     data-panel-title="false"
+                     data-panel-collapse="false"
+                     data-panel-fullscreen="false"
+                >
+                    <div class="panel-heading">
+                        <span class="panel-title">
+                            Фильтр
+                        </span>
+                    </div>
+                    <div class="panel-body <%= action %> pn">
+                        <%= render "admin/_portlets/#{action}/filter",
+                                   data: data,
+                                   entity: entity,
+                                   actions: actions,
+                                   action: action,
+                                   data_attr: data_attr %>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- end: .tray-center -->
+<% end %>
+
+<!-- begin: .tray-center -->
+<div class="tray tray-center">
+
+    <div class="admin-panels">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="panel sort-disable panel-visible"
+                     data-panel-color="false"
+                     data-panel-remove="false"
+                     data-panel-title="false"
+                     data-panel-collapse="false"
+                     data-panel-fullscreen="false"
+                >
+                    <div class="panel-heading">
+                        <span class="panel-title">
+                            <%= raw(title) %>
+                        </span>
+                    </div>
+                    <div class="panel-body <%= action %> pn">
+                        <%= render "admin/_portlets/#{action}/content",
+                                   data: data,
+                                   entity: entity,
+                                   actions: actions,
+                                   action: action,
+                                   data_attr: data_attr %>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- end: .tray-center -->
+
+
+<% unless flash[:notice].nil? %>
+    <% content_for :javascript do %>
+
+        <script>
+            // Create new Notification
+            new PNotify({
+                text: '<%= flash[:notice].html_safe %>',
+                shadow: false,
+                opacity: 1,
+                addclass: '',
+                type: 'success',
+                stack: {
+                    "dir1": "down",
+                    "dir2": "left",
+                    "push": "top",
+                    "spacing1": 10,
+                    "spacing2": 10
+                },
+                width: '400px',
+                delay: 2500,
+                buttons: {
+                    closer: false,
+                    closer_hover: false,
+                    sticker: false,
+                    sticker_hover: false
+                }
+            });
+        </script>
+    <% end %>
+<% end %>

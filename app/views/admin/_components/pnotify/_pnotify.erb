@@ -1,0 +1,27 @@
+<script>
+	// Create new Notification
+	new PNotify({
+		title: '<%= title %>',
+		text: '<%= text %>',
+		icon: '<%= icon %>',
+		shadow: <%= shadow %>,
+		opacity: <%= opacity %>,
+		addclass: '',
+		type: '<%= type %>',
+		stack: {
+			"dir1": "down",
+			"dir2": "left",
+			"push": "top",
+			"spacing1": 10,
+			"spacing2": 10
+		},
+		width: '<%= width %>',
+		delay: <%= delay %>,
+		buttons: {
+			closer: true,
+			closer_hover: true,
+			sticker: true,
+			sticker_hover: true
+		}
+	});
+</script>

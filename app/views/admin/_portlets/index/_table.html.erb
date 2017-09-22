@@ -1,0 +1,38 @@
+<table id="data-table-classic_<%= entity.to_s.downcase %>" class="data-table table table-hover" cellspacing="0" width="100%" data-entity-name="<%= entity.to_s.downcase %>"
+       <% if data_attr.any? %><% data_attr.each do |key, value| %> data-<%= key.to_s %>="<%= value %>"<% end %><% end %>>
+	<thead>
+		<tr>
+			<% entity.table_props.each do |prop| %>
+                <% if (prop[:roles].count == 0) || (current_user.role? :admin) || (prop[:roles].include?(eval(":#{current_user.role.name}"))) %>
+				    <th class="<%= prop[:machine] %> columns"><%= prop[:name] %></th>
+                <% end %>
+			<% end %>
+
+			<th class="action"></th>
+		</tr>
+	</thead>
+	<tbody>
+	<% data.each do |datum| %>
+		<tr class="<%= datum.table_row_color %>">
+			<% entity.table_props.each do |prop| %>
+                <% if (prop[:roles].count == 0) || (current_user.role? :admin) || (prop[:roles].include?(eval(":#{current_user.role.name}"))) %>
+                    <% value = render "admin/_portlets/_cells/#{prop[:type]}/#{prop[:template]}",
+                                      datum: datum,
+                                      entity: entity,
+                                      prop: prop %>
+                    <td class="<%= prop[:machine] %> column <%= 'show_in_modal' if prop[:options][:show_in_modal] %>"
+                        data-show_in_modal_text="<%= "#{prop[:options][:prefix_show_in_modal]}#{value}#{prop[:options][:postfix_show_in_modal]}" if prop[:options][:show_in_modal] %>">
+                        <%= value %>
+                    </td>
+                <% end %>
+			<% end %>
+
+			<td class="action">
+				<%= render "admin/_portlets/#{action}/actions",
+                           actions: actions,
+                           datum: datum %>
+			</td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>

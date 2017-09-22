@@ -1,0 +1,4 @@
+<label class="col-md-3 control-label" for="">
+    <!-- FIELD -->      <!-- STAR -->
+    <%= raw(field[:name]) %> <%= raw '<span class="text-danger">*</span>' if field[:validates][:rules].count > 0 %>
+</label>

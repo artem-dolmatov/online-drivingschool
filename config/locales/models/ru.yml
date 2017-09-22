@@ -1,0 +1,11 @@
+ru:
+  activerecord:
+    models:
+      user: Пользователь
+    attributes:
+      user:
+        email: E-mail
+        password: Пароль
+        status_id: Статус
+        roles: Роль
+        site_id: Сайт

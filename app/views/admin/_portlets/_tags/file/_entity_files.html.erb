@@ -1,0 +1,95 @@
+<%
+   entity_name = "#{entity.to_s.underscore.downcase}_#{field[:machine].underscore}"
+   files = EntityFile.where(:entity => entity.to_s, :entity_id => data.id, :name => field[:machine]).order(:id => :desc)
+   files_count = files.count
+   file_title = "Загружено файлов: #{files_count}" if files_count > 1
+   file_title = files.first.original_filename if files_count == 1
+   unique_name = "#{entity.to_s.underscore.downcase}_file[#{field[:machine].underscore}]"
+%>
+
+<!-- FORM GROUP-->
+<div class="form-group">
+    <%= render 'admin/_portlets/_tags/_label/default', field: field %>
+    <div class="col-md-9">
+        <div class="bs-component field prepend-icon append-button file">
+            <span class="button btn-primary"><%= field[:options][:placeholder] %></span>
+            <%= file_field_tag "#{unique_name}#{'[]' if field[:options][:multiple]}",
+                               :multiple => field[:options][:multiple],
+                               :id => entity_name,
+                               :class => 'gui-file entity_file_tag',
+                               :data => {:entity => entity.to_s,
+                                         :multiple => field[:options][:multiple]} %>
+            <input value="<%= file_title %>" name="<%= "#{entity.to_s.underscore.downcase}[#{field[:machine]}]#{'[]' if field[:options][:multiple]}" %>" type="text" class="gui-input <%= "#{entity_name}__title" %>" id="<%= "#{entity_name}__title" %>" placeholder="<%= field[:options][:placeholder] %>">
+            <label class="field-icon">
+                <i class="fa fa-upload"></i>
+            </label>
+
+            <div class="hidden">
+                <%= hidden_field_tag(:entity, entity.to_s) %>
+                <%= hidden_field_tag(:entity_id, data.id) %>
+                <%= hidden_field_tag('field_names[]', field[:machine]) %>
+                <%= hidden_field_tag("#{field[:machine]}[multiple]", field[:options][:multiple]) %>
+            </div>
+
+            <!-- HELP TEXT -->
+            <% if field[:options][:help_text] %>
+                <span class="help-block mt5 mbn">&nbsp;<i class="fa fa-info-circle"></i> <%= raw field[:options][:help_text] %> </span>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<div class="form-group <%= "#{entity_name}__progress-bar" %>" style="display: none;">
+    <label class="col-md-3 control-label" for=""></label>
+    <div class="col-md-9">
+        <div class="bs-component">
+            <!-- Primary Progress Bar -->
+            <div class="progress">
+                <div class="progress-bar progress-bar-info progress-bar-striped active"
+                     role="progress_bar"
+                     aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 3%">
+                    3%
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="form-group <%= "#{entity_name}__previews" %>" data-count="<%= files.count %>" <%= 'style="display: none"'.html_safe unless files.any? %> data-multiple="<%= field[:options][:multiple] %>">
+	<label class="col-md-3 control-label" for=""></label>
+	<div class="col-md-9 previews row">
+		<% if files.any? %>
+			<% files.each do |record| %>
+				<div class="preview-file col-md-3 mw400 ib">
+					<div class="panel p6 pbn">
+                        <% content_types = %w(image/gif image/jpeg image/pjpeg image/png) %>
+						<a class="img-wrap <%= content_types.include?(record.content_type) ? 'magnific_popup' : 'file_link' %>" href="<%= record.file.url %>" <%= 'target=_blank' unless content_types.include?(record.content_type) %>>
+							<img src="<%= ( content_types.include?(record.content_type) ? record.file.preview : '/assets/partials/img/file.jpg')  %>" class="img-responsive" title="<%= record.title %>">
+						</a>
+						<div class="row table-layout">
+							<div class="col-xs-8 pln">
+								<h6><%= record.title %></h6>
+							</div>
+							<div class="col-xs-4 text-right va-m prn">
+								<a href="#" class="btn btn-xs btn-default btn-bloc <%= entity_name %>_preview-file__delete"
+								   data-id="<%= record.id %>"
+								   data-prop="">
+									<span class="octicon octicon-trashcan fs16 text-muted"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			<% end %>
+		<% end %>
+	</div>
+</div>
+
+<% content_for :javascript do %>
+    <script>
+        <%= render 'admin/_portlets/_tags/file/entity_files.js.erb',
+                   entity_name: entity_name %>
+
+    </script>
+<% end %>

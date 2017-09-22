@@ -1,0 +1,120 @@
+<% if current_user.role? :admin %>
+	<%
+	   entity =  Post
+	   content_for :title, entity.signatures[:elements]
+	   breadcrumb :general, [[entity.signatures[:elements], 'blank']]
+
+	   links = [{
+	                    name: "<i class=\"octicon octicon-plus\"></i>&nbsp;&nbsp; #{entity.signatures[:add_element]}",
+	                    link: new_admin_post_url,
+	                    class: 'btn ladda-button btn-system'
+	            }]
+
+	   actions = [{
+	                      name: '<i class="fa fa-pencil"></i>',
+	                      link: 'edit_admin_post_path',
+	                      method: :get,
+	                      format: 'html',
+	                      class: 'btn-xs btn btn-system ',
+	                      exclusion: []
+	              },{
+	                      name: '<i class="octicon octicon-x"></i> ',
+	                      link: 'admin_post_path',
+	                      method: :delete,
+	                      format: 'json',
+	                      class: 'btn-xs btn btn-danger btn-row-delete',
+	                      exclusion: []
+	              }]
+
+	   table_data_attr = {
+	           sort_disable: -1,
+	           sort_column: 0,
+	           sort_default: 'asc',
+	           display_length: 25
+	   } %>
+
+	<%= render 'admin/_portlets/portlet',
+	           action: 'index',
+	           title: "<span class=\"glyphicon glyphicon-tasks\"></span> #{entity.signatures[:list_elements]}",
+	           links: links,
+	           data: @posts,
+	           entity: entity,
+	           actions: actions,
+	           data_attr: table_data_attr %>
+<% else %>
+
+	<%
+	   entity =  Post
+	   content_for :title, entity.signatures[:elements]
+	   breadcrumb :general, [[entity.signatures[:elements], 'blank']]
+	%>
+
+	<!-- Timeline Wrapper -->
+	<div id="timeline" class="timeline-single">
+
+		<div class="row">
+			<!-- Timeline - Left Column -->
+			<div class="col-sm-6 left-column">
+				<% if @posts.any? %>
+
+					<% @posts.order(created_at: :desc).each do |post| %>
+						<div class="timeline-item">
+							<div class="timeline-icon">
+								<span class="fa fa-video-camera text-primary"></span>
+							</div>
+							<div class="panel">
+								<div class="panel-heading">
+		                    <span class="panel-title">
+		                       <%= post.title %> </span>
+									<div class="panel-header-menu pull-right mr10 text-muted fs12"> <%= post.created_at.strftime('%d.%m.%Y') %> </div>
+								</div>
+								<div class="panel-body">
+
+									<div class="mb10">
+										<%= post.body.html_safe %>
+									</div>
+
+									<div>
+
+										<% video = EntityFile.where(entity: 'Post', entity_id: post.id, name: 'video').first %>
+										<% unless video.nil? %>
+
+											<%= videojs_rails sources: { mp4: video.file.url, webm: video.file.url},
+											                  setup: "{}",
+											                  controls: true,
+											                  width: 800, height: 400 %>
+										<% end %>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					<% end %>
+
+				<% else %>
+
+					<div class="timeline-item">
+						<div class="timeline-icon">
+							<span class="fa fa-video-camera text-primary"></span>
+						</div>
+						<div class="panel">
+							<div class="panel-heading">
+			                    <span class="panel-title">
+			                      Информация
+			                    </span>
+							</div>
+							<div class="panel-body">
+
+								<div class="mb10">
+									Материалов еще нет
+								</div>
+
+							</div>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</div>
+
+<% end %>

@@ -1,0 +1,5 @@
+<% links.each do |item| %>
+    <%= link_to raw(item[:name]),
+                item[:link],
+                :class => item[:class]  %>
+<% end %>

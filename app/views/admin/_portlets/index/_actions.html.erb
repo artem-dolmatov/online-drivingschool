@@ -1,0 +1,10 @@
+<% actions.each do |action| %>
+    <% unless action[:exclusion].include? datum.id %>
+        <% if ( (action[:method] == :get) && (can? :update, datum) ) || ( (action[:method] == :delete) && (can? :delete, datum) ) %>
+            <%= link_to raw(action[:name]),
+                        eval("#{action[:link]}(:id => #{datum.id}, :format => :#{action[:format]})"),
+                        method: action[:method],
+                        class: action[:class], data: {effect: 'mfp-slideDown'} %>
+        <% end %>
+    <% end %>
+<% end %>

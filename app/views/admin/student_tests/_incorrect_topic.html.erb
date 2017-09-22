@@ -1,0 +1,98 @@
+<div class="tray tray-center">
+
+    <div class="admin-panels">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="panel sort-disable panel-visible"
+                     data-panel-color="false"
+                     data-panel-remove="false"
+                     data-panel-title="false"
+                     data-panel-collapse="false"
+                     data-panel-fullscreen="false"
+                >
+                    <div class="panel-heading">
+                        <span class="panel-title">
+                            Вы неверно ответили на вопрос по Теме: <%= @topic.name %>.
+                        </span>
+                    </div>
+                    <div class="panel-body lecture">
+                        <% if @topic_questions.any? %>
+                            <div class="tab-block mb25">
+                                <ul class="nav nav-tabs tabs-border">
+                                    <% @topic_questions.each_with_index do |question, index| %>
+                                        <% number_q = index + 1 %>
+
+                                        <li class="<%= 'active' if number_q == 1%>">
+                                            <a href="#question_<%= number_q %>" id="question_<%= number_q %>_link" <% if current_user.role? :admin %>data-toggle="tab"<% end %> class="question_link"><%= number_q %></a>
+                                        </li>
+                                    <% end %>
+                                </ul>
+                                <div class="tab-content">
+
+                                    <% @topic_questions.each_with_index do |question, index| %>
+                                        <% number_q = index + 1 %>
+                                        <% image = EntityFile.where(:entity => 'Question', :entity_id => question.id, :name => 'image').first %>
+
+                                        <div id="question_<%= number_q %>" class="question tab-pane <%= 'active' if number_q == 1 %>">
+                                            <div class="img-responsive thumbnail ">
+                                                <% unless image.nil? %>
+                                                    <%= image_tag image.file, class: '' %>
+                                                <% else %>
+                                                    <div class="alert alert-default alert-dismissable" style="margin-bottom: 0;">
+                                                        <h3 class="mt5">К данному вопрос изображения нет.</h3>
+                                                    </div>
+                                                <% end%>
+                                            </div>
+
+                                            <div class="alert alert-dark alert-dismissable">
+                                                <h3 class="mt5"><%= question.name %></h3>
+                                            </div>
+
+
+                                            <% question.answers.order('RANDOM()').each_with_index do |answer, index|%>
+                                                <% number_a = index + 1 %>
+                                                <div class="radio-custom answer mb5">
+                                                    <input type="radio" id="answer_<%= answer.id %>_e" name="question_e<%= question.id %>[answer]" value="<%= answer.id %>" data-correct="<%= answer.correct %>">
+                                                    <label for="answer_<%= answer.id %>_e"><%= number_a %>. <%= answer.name %></label>
+
+                                                    <% if answer.correct == 1 %>
+                                                        <div class="radio-help alert alert-success alert-dismissable mt10" style="display: <%= (current_user.role?(:admin) ? 'block' : 'none') %>">
+                                                            <i class="fa fa-check pr10"></i>
+                                                            <strong>Правильно!</strong> <%= answer.desc %>
+                                                        </div>
+                                                    <% else %>
+                                                        <div class="radio-help alert alert-danger alert-dismissable mt10" style="display: <%= (current_user.role?(:admin) ? 'block' : 'none') %>">
+                                                            <i class="fa fa-remove pr10"></i>
+                                                            <strong>Ошибка!</strong> <%= answer.desc %>
+                                                        </div>
+                                                    <% end %>
+                                                </div>
+                                            <% end %>
+
+                                            <% if @topic_questions.count != number_q %>
+                                                <a href="#question_<%= number_q + 1 %>_link" class="btn btn-success btn-block next-question mw200 mt15 disabled">Следующий вопрос</a>
+                                            <% else %>
+                                                <a href="#" class="btn btn-success btn-block get-result mw200 mt15 disabled" data-id="<%= @topic.id %>">Вернуться к тесту</a>
+                                            <% end %>
+
+                                        </div>
+                                    <% end %>
+
+                                </div>
+                            </div>
+
+                        <% else %>
+
+                            Вопросов по данной теме еще нет :(
+
+                        <% end %>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

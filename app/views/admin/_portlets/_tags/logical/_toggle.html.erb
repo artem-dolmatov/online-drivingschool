@@ -1,0 +1,27 @@
+<%
+   entity_name = "#{entity.to_s.underscore.downcase}_#{field[:machine].underscore}"
+%>
+<div class="form-group">
+    <%= render 'admin/_portlets/_tags/_label/default', field: field %>
+    <div class="col-md-9">
+        <div class="bs-component field">
+            <label class="switch 0switch-system block mt15">
+
+                <%= f.check_box eval(":#{field[:machine]}"), :checked_value => '1', :unchecked_value => '0', :class => 'gui-logical' %>
+                <label for="<%= entity_name %>" data-on="<%= field[:options][:true] %>" data-off="<%= field[:options][:false] %>"></label>
+
+                <% if field[:options][:label_right] %>
+                    <span><%= field[:options][:label_right] %></span>
+                <% end %>
+            </label>
+
+            <!-- FIELD -->
+            <%#= f.text_field eval(":#{field[:machine]}"), :class => 'gui-input', :placeholder => field[:name] %>
+
+            <!-- HELP TEXT -->
+            <% if field[:options][:help_text] %>
+                <span class="help-block mt5 mbn">&nbsp;<i class="fa fa-info-circle"></i> <%= raw field[:options][:help_text] %> </span>
+            <% end %>
+        </div>
+    </div>
+</div>

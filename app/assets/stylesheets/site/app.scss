@@ -1,0 +1,112 @@
+/* Made by rostixman - rostixman@gmail.com */
+
+@import 'mixin';
+
+/* --- VARIABLES ------------------------------------------------------------------------- */
+
+/* height */
+$header_height: 180px;
+$menu_height: 95px;
+$footer_height: 116px;
+
+/* --- LAYOUT ---------------------------------------------------------------------------- */
+
+body, html {
+	font: 100.01% 'Helvetica Neue', Arial;
+	background: #ffffff;
+}
+
+#wrapper {
+	position: relative;
+	height: 100%;
+	height: auto !important;
+	min-height: 100%;
+
+	header {
+		height: $header_height;
+	}
+	nav {
+		height: $menu_height;
+	}
+	.content {
+	}
+	section {
+	}
+	aside {
+
+	}
+	.reload {
+		position: relative;
+		height: $footer_height;
+		clear: both;
+	}
+}
+footer {
+	position: relative;
+	height: $footer_height;
+	margin: -$footer_height auto;
+}
+
+
+/* --- HEADER ---------------------------------------------------------------------------- */
+
+header {  }
+
+/* --- NAV ------------------------------------------------------------------------------- */
+
+nav {  }
+
+/* --- CONTENT --------------------------------------------------------------------------- */
+
+.content {  }
+
+/* --- FOOTER ---------------------------------------------------------------------------- */
+
+footer {  }
+
+/* --- DIFFERENT ------------------------------------------------------------------------- */
+
+
+/* --- ALL ------------------------------------------------------------------------------- */
+
+.container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+
+/* --- YANDEX POPUP --------------------------------------------------------------------------- */
+
+.popover {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1010;
+	text-align: center;
+	display: block;
+	padding: 11px;
+	box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.39);
+	margin-top: -26px;
+	@include border-radius(3px);
+
+	.popover-inner ymaps {
+		max-width: 200px;
+		width: 200px;
+	}
+
+	.arrow {
+		position: absolute;
+		bottom: -9px;
+		left: 46%;
+		width: 18px;
+		height: 9px;
+		border: none;
+	}
+	.close {
+		position: absolute;
+		right: 5px;
+		top: 0;
+		border: 0;
+		opacity: 1;
+	}
+}

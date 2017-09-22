@@ -1,0 +1,30 @@
+<% if item[:link] == 'label' %>
+    <li class="<%= item[:options][:class] %>"><%= item[:name] %></li>
+<% else %>
+    <li class="<%= 'active' if (item[:link][0] != '#') && (request.env['REQUEST_URI'][eval(item[:link])] != nil) %>">
+        <a href="<%= eval(item[:link]) %>" class="<%= 'accordion-toggle' if item[:sub] %>">
+            <% if item[:options][:icon] %>
+                <span class="<%= item[:options][:icon] %>"></span>
+            <% end %>
+            <span class="sidebar-title"><%= item[:name] %></span>
+
+            <% if item[:sub] %>
+                <span class="caret"></span>
+            <% end %>
+
+            <% if item[:options][:tray] %>
+                <span class="sidebar-title-tray">
+                    <span class="label label-xs bg-primary"><%= eval(item[:options][:tray]) %></span>
+                </span>
+            <% end %>
+        </a>
+
+        <% if item[:sub] %>
+            <ul class="nav sub-nav">
+                <% item[:sub].each do |item| %>
+                    <%= render 'layouts/admin/includes/menus/main/menu_item', item: item %>
+                <% end %>
+            </ul>
+        <% end %>
+    </li>
+<% end %>

@@ -1,0 +1,55 @@
+<%
+   # entity_name = "#{entity.to_s.underscore.downcase}_#{prop[:machine].underscore}"
+   files = EntityFile.where(:entity => entity.to_s, :entity_id => datum.id, :name => prop[:machine]).order(:id => :desc)
+%>
+
+<% if files.any? %>
+    <% files.each do |record| %>
+        <div class="preview-file col-md-6 mw400 ib">
+
+            <% content_types = %w(image/gif image/jpeg image/pjpeg image/png) %>
+
+	        <a class="img-wrap <%= content_types.include?(record.content_type) ? 'magnific_popup' : 'file_link' %>" href="<%= record.file.url %>" <%= 'target=_blank' unless content_types.include?(record.content_type) %>>
+                <img src="<%= ( content_types.include?(record.content_type) ? record.file.preview : '/assets/partials/img/file.jpg')  %>" class="img-responsive1" title="<%= record.title %>" height="100">
+	        </a>
+        </div>
+    <% end %>
+<% end %>
+
+<% content_for :javascript do %>
+	<script>
+		// init preview
+		$('.dataTables_wrapper').magnificPopup({
+			delegate: '.magnific_popup',
+			gallery: {
+				enabled: false
+			},
+			type: 'image',
+			callbacks: {
+				beforeOpen: function(e) {
+
+					$('body').addClass('mfp-bg-open');
+
+					// Set Magnific Animation
+					this.st.mainClass = 'mfp-zoomIn';
+
+					// Inform content container there is an animation
+					this.contentContainer.addClass('mfp-with-anim');
+				},
+				afterClose: function(e) {
+
+					setTimeout(function() {
+						$('body').removeClass('mfp-bg-open');
+						$(window).trigger('resize');
+					}, 1000)
+
+				}
+			},
+//        overflowY: 'scroll',
+			removalDelay: 200,
+			fixedContentPos: true
+		}).on('click', 'magnific_popup', function(e){
+			e.preventDefault();
+		});
+	</script>
+<% end %>

@@ -1,0 +1,36 @@
+<!-- Start: Topbar -->
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= yield :title_path %>">
+                    <%= yield :title %>
+                </a>
+            </li>
+
+            <% breadcrumbs.tap do |links| %>
+                <% if links.any? %>
+                    <% links.each do |link| %>
+                        <%
+                           if link.text == 'Главная'
+                               li_class = 'crumb-icon'
+                           elsif link.current?
+                               li_class = 'crumb-trail'
+                           else
+                               li_class = 'crumb-link'
+                           end
+                        %>
+                        <li class="<%= li_class %>">
+                            <% if link.current? %>
+                                <%= link.text %>
+                            <% else %>
+                                <%= link_to (link.text == 'Главная' ? raw('<span class="glyphicon glyphicon-home"></span>') : link.text), link.url, class: (link.current? ? 'crumb-trail' : nil) %>
+                            <% end %>
+                        </li>
+                    <% end %>
+                <% end %>
+            <% end %>
+        </ol>
+    </div>
+</header>
+<!-- End: Topbar -->

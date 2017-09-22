@@ -1,0 +1,126 @@
+/* Made by rostixman - rostixman$gmail.com */
+
+@mixin inline-block {
+	display: -moz-inline-stack;
+	display: inline-block;
+	vertical-align: top;
+	zoom: 1;
+	*display: inline;
+}
+
+@mixin clearfix {
+	display: inline-block;
+
+	&:after {
+		content: ".";
+		display: block;
+		height: 0;
+		clear: both;
+		visibility: hidden;
+	}
+	* html & { height: 1px }
+}
+
+@mixin outline ($border: 1px) {
+	outline: $border dashed red;
+}
+
+@mixin border-radius ($radius: 3px) {
+	-webkit-border-radius : $radius;
+	-moz-border-radius    : $radius;
+	border-radius         : $radius;
+}
+@mixin transition ($time: 0.2s, $type: ease-in-out, $css: all, $delay: 0s) {
+	-webkit-transition : $css $time $type $delay;
+	-moz-transition    : $css $time $type $delay;
+	-ms-transition     : $css $time $type $delay;
+	-o-transition      : $css $time $type $delay;
+	transition         : $css $time $type $delay;
+}
+@mixin no-transition () {
+	-webkit-transition : none;
+	-moz-transition    : none;
+	-ms-transition     : none;
+	-o-transition      : none;
+	transition         : none;
+}
+@mixin rotate ($deg: 90deg) {
+	-webkit-transform : rotate($deg);
+	-moz-transform    : rotate($deg);
+	-o-transform      : rotate($deg);
+	transform         : rotate($deg);
+}
+@mixin rotateX ($deg: 90deg) {
+	-webkit-transform : rotateX($deg);
+	-moz-transform    : rotateX($deg);
+	-o-transform      : rotateX($deg);
+	transform         : rotateX($deg);
+}
+@mixin rotateY ($deg: 90deg) {
+	-webkit-transform : rotateY($deg);
+	-moz-transform    : rotateY($deg);
+	-o-transform      : rotateY($deg);
+	transform         : rotateY($deg);
+}
+@mixin translate ($x: 50px, $y: 50px) {
+	-webkit-transform : translate($x, $y);
+	-moz-transform    : translate($x, $y);
+	-o-transform      : translate($x, $y);
+	transform         : translate($x, $y);
+}
+@mixin scale ($scale: 1.5) {
+	-webkt-transform : scale($scale);
+	-moz-transform    : scale($scale);
+	-o-transform      : scale($scale);
+	transform         : scale($scale);
+}
+@mixin skew ($degX: 0deg, $degY: 0deg) {
+	-webkit-transform : skew($degX, $degY);
+	-moz-transform    : skew($degX, $degY);
+	-o-transform      : skew($degX, $degY);
+	transform         : skew($degX, $degY);
+}
+@mixin transform ($x: 0px, $y: 0px, $rotate: 0deg, $scale: 1, $degX: 0deg, $degY: 0deg) {
+	-moz-transform:    translate($x, $y) rotate($rotate) scale($scale) skew($degX, $degY);
+	-o-transform:      translate($x, $y) rotate($rotate) scale($scale) skew($degX, $degY);
+	-webkit-transform: translate($x, $y) rotate($rotate) scale($scale) skew($degX, $degY);
+	transform:         translate($x, $y) rotate($rotate) scale($scale) skew($degX, $degY);
+}
+@mixin matrix ($a, $c, $b, $d, $tx, $ty) {
+	-webkit-transform : matrix($a, $c, $b, $d, $tx, $ty); /* Safari 3.1+ и Chrome 2.0+ */
+	-moz-transform    : matrix($a, $c, $b, $d, $tx, $ty); /* Firefox 3.5+ */
+	-ms-transform     : matrix($a, $c, $b, $d, $tx, $ty); /* IE 9.0 */
+	-o-transform      : matrix($a, $c, $b, $d, $tx, $ty); /* Opera 10.5+ */
+	filter            : progid:DXImageTransform.Microsoft.Matrix(M11=$a, M12=$b, M21=$c, M22=$d, Dx=$tx, Dy=$ty); /* IE 5.5+ */
+}
+@mixin gradient ($color1: #f6fafd, $color2: #d9edfc) {
+	background: $color1;
+	background: -moz-linear-gradient(top, $color1 0%, $color2 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$color1), color-stop(100%,$color2));
+	background: -webkit-linear-gradient(top, $color1 0%,$color2 100%);
+	background: -o-linear-gradient(top, $color1 0%,$color2 100%);
+	background: -ms-linear-gradient(top, $color1 0%,$color2 100%);
+	background: linear-gradient(to bottom, $color1 0%,$color2 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='${color1}', endColorstr='${color2}',GradientType=0 );
+}
+@mixin brightness ($per: 130%) {
+	-webkit-filter : brightness($per);
+	-moz-filter    : brightness($per);
+	-ms-filter     : brightness($per);
+	-o-filter      : brightness($per);
+	filter         : brightness($per);
+}
+@mixin contrast ($per: 130%) {
+	-webkit-filter : contrast($per);
+	-moz-filter    : contrast($per);
+	-ms-filter     : contrast($per);
+	-o-filter      : contrast($per);
+	filter         : contrast($per);
+}
+
+@mixin placeholder {
+	&::-webkit-input-placeholder {@content}
+	&:-moz-placeholder           {@content}
+	&::-moz-placeholder          {@content}
+	&:-ms-input-placeholder      {@content}
+}

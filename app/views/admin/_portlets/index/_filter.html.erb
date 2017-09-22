@@ -1,0 +1,29 @@
+<table id="filter_<%= entity.to_s.downcase %>" class="filter-table table" cellspacing="0" width="100%" data-entity-name="<%= entity.to_s.downcase %>"
+       <% if data_attr.any? %><% data_attr.each do |key, value| %> data-<%= key.to_s %>="<%= value %>"<% end %><% end %>>
+
+    <tbody>
+    <tr>
+        <% entity.table_props.each do |prop| %>
+            <% if (prop[:roles].count == 0) || (current_user.role? :admin) || (prop[:roles].include?(eval(":#{current_user.role.name}"))) %>
+                <th class="<%= prop[:machine] %> columns"><%= prop[:name] %></th>
+            <% end %>
+        <% end %>
+        <th></th>
+    </tr>
+    </tbody>
+
+    <tfoot>
+    <tr>
+        <% entity.table_props.each do |prop| %>
+            <% if (prop[:roles].count == 0) || (current_user.role? :admin) || (prop[:roles].include?(eval(":#{current_user.role.name}"))) %>
+                <td class="<%= prop[:machine] %> columns"></td>
+            <% end %>
+        <% end %>
+        <td class="action">
+            <a class="filter-clear btn btn-sm btn-block btn-system" href="#">
+                Очистить
+            </a>
+        </td>
+    </tr>
+    </tfoot>
+</table>

@@ -1,0 +1,68 @@
+<%= form_for(resource, as: resource_name,# turboboost: true,
+             url: session_path(resource_name),
+             html: {class: '', id: '', role: 'form'}) do |f| %>
+
+	<div class="panel-body bg-light p30">
+		<div class="row">
+			<div class="col-sm-12">
+
+				<div class="section hidden">
+					<%= f.password_field :password, class: 'password' %>
+				</div>
+				<!-- end section -->
+
+				<div class="section">
+					<label for="email" class="field-label text-muted fs18 mb10">E-mail</label>
+					<label for="email" class="field prepend-icon">
+						<%= f.email_field :email, autofocus: true, class: 'gui-input', id: 'email', placeholder: 'Ваш E-mail' %>
+						<label for="username" class="field-icon">
+							<i class="fa fa-envelope"></i>
+						</label>
+					</label>
+				</div>
+				<!-- end section -->
+
+				<div class="section">
+					<label for="password" class="field-label text-muted fs18 mb10">Пароль</label>
+					<label for="password" class="field prepend-icon">
+						<%= f.password_field :password, autocomplete: 'off', class: 'gui-input', id: 'password', placeholder: 'Пароль' %>
+						<label for="password" class="field-icon">
+							<i class="fa fa-lock"></i>
+						</label>
+					</label>
+				</div>
+				<!-- end section -->
+
+			</div>
+			<%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
+		</div>
+	</div>
+	<!-- end .form-body section -->
+	<div class="panel-footer clearfix p10 ph15">
+		<%#= f.submit 'Войти', class: 'button btn-system ladda-button mr10 pull-right', data: {effect: 'mfp-slideDown'} %>
+		<button href="#" class="like-simple-submit button btn-system mr10 pull-right" data-style="slide-down">
+			<span class="ladda-label">Войти</span>
+		</button>
+		<label class="switch ib switch-system pull-left input-align mt10">
+			<%= f.check_box :remember_me, :checked => true %>
+			<label for="user_remember_me" data-on="ДА" data-off="НЕТ"></label>
+			<span>Запомнить меня</span>
+		</label>
+	</div>
+<% end %>
+
+<% if flash[:alert] %>
+	<% content_for :javascript do %>
+
+		<%= render 'admin/_components/pnotify/pnotify',
+		           title: 'Ошибка',
+		           text: flash[:alert].html_safe,
+		           icon: 'fa fa-warning',
+		           shadow: true,
+		           opacity: 0.9,
+		           type: 'error',
+		           width: '300px',
+		           delay: 2000 %>
+
+	<% end %>
+<% end %>
